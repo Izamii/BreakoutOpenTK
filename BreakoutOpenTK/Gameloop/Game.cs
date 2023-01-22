@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using BreakoutOpenTK.Rendering.Camera;
 using BreakoutOpenTK.Rendering.Levels;
-using BreakoutOpenTK.Rendering.Shaders;
 using BreakoutOpenTK.Rendering.Sprites;
-using BreakoutOpenTK.Rendering.Textures;
 using BreakoutOpenTK.Rendering.Utility;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -36,9 +33,10 @@ namespace BreakoutOpenTK.Gameloop
         private Vector2 _playerSize;
         private Ball _ball;
         private float _initialDrag = 70;
-        private float _currentDrag = 70;
+        private float _currentSpeedMultiplier = 1;
         private int _lives = 3;
         GameStaus _gameStatus;
+        private float _endCart = 0;
         Random _randomizer = new Random();
         
 
@@ -50,7 +48,7 @@ namespace BreakoutOpenTK.Gameloop
         {
             _camera = new Camera2D(new Vector2((float)width/2, (float)height/2), new Vector2(width, height));
             _shaderAndTextureManager = new ShaderAndTextureManager();
-            _gameStatus = GameStaus.Game;
+            _gameStatus = GameStaus.Menu;
         }
 
         protected override void OnLoad()
@@ -58,7 +56,7 @@ namespace BreakoutOpenTK.Gameloop
             VSync = VSyncMode.Off;
             base.OnLoad();
 
-            GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             GL.Enable(EnableCap.Blend);
             //this is required for transparency
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
@@ -84,6 +82,10 @@ namespace BreakoutOpenTK.Gameloop
             _shaderAndTextureManager.LoadTexture("passThrough", "Resources/Textures/passthrough.png");
             _shaderAndTextureManager.LoadTexture("sticky", "Resources/Textures/sticky.png");
             _shaderAndTextureManager.LoadTexture("death", "Resources/Textures/death.png");
+            _shaderAndTextureManager.LoadTexture("title", "Resources/Textures/Mine-Out.png");
+            _shaderAndTextureManager.LoadTexture("gameOver", "Resources/Textures/gameOver.png");
+            _shaderAndTextureManager.LoadTexture("clear", "Resources/Textures/clear.png");
+            _shaderAndTextureManager.LoadTexture("menuText", "Resources/Textures/menuText.png");
             
             //load sprite
             _sprite = new Sprite(_shaderAndTextureManager.GetShader("sprite"));
@@ -102,12 +104,14 @@ namespace BreakoutOpenTK.Gameloop
             
             _ball = new Ball(
                 new Vector2(_camera.WindowSize.X/2 - _playerSize.X/2 - ballSize.X/2, _camera.WindowSize.Y - _playerSize.Y - 20 - ballSize.Y),
-                ballSize, new Vector2(_currentDrag, -400), _shaderAndTextureManager.GetTexture("pickaxe"),
+                ballSize, new Vector2(_currentSpeedMultiplier, -400), _shaderAndTextureManager.GetTexture("pickaxe"),
                 _camera.WindowSize.X);
             
             //load levels
             Level item = new ("Rendering/Levels/TestLevel.json" ,_shaderAndTextureManager);
-            _levels = new Dictionary<string, Level> {{"TestLevel", item}};
+            Level item2 = new("Rendering/Levels/CreeperLevel.json", _shaderAndTextureManager);
+
+            _levels = new Dictionary<string, Level> {{item.GetLevelName(), item}, {item2.GetLevelName(), item2}};
             _currentLevel = item;
         }
 
@@ -115,19 +119,35 @@ namespace BreakoutOpenTK.Gameloop
         {
             base.OnRenderFrame(args);
             //clear the screen
-            GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit);
+            
+            //render the background
+            _sprite.Render(Vector2.Zero, new Vector2(Size.X, Size.Y), 0.0f,
+                _shaderAndTextureManager.GetTexture("background"), new Vector3(0.6f, 0.6f, 0.6f));
+            //render the level
+            _currentLevel.RenderLevel(_sprite);
+            _player.Render(_sprite);
+            _ball.Render(_sprite);
 
-            if (_gameStatus == GameStaus.Game)
+            switch (_gameStatus)
             {
-                //render the background
-                _sprite.Render(Vector2.Zero, new Vector2(Size.X, Size.Y), 0.0f,
-                    _shaderAndTextureManager.GetTexture("background"), Vector3.One);
-                //render the level
-                _currentLevel.RenderLevel(_sprite);
-                _player.Render(_sprite);
-                _ball.Render(_sprite);
+                case GameStaus.Menu:
+                    _sprite.Render(new Vector2(243.5f,177), new Vector2(313, 66), MathF.Sin(GameTime.TotalTime) * MathF.PI / 30,
+                        _shaderAndTextureManager.GetTexture("title"), Vector3.One);
+                    _sprite.Render(new Vector2(175, 350), new Vector2(450, 70), 0,
+                        _shaderAndTextureManager.GetTexture("menuText"), Vector3.One);
+                    break;
+                case GameStaus.GameOver:
+                    _sprite.Render(new Vector2(205, 200), new Vector2(390, 68), 0,
+                        _shaderAndTextureManager.GetTexture("gameOver"), Vector3.One);
+                    break;
+                case GameStaus.Win:
+                    _sprite.Render(new Vector2(287.5f, 200), new Vector2(225, 68), 0,
+                        _shaderAndTextureManager.GetTexture("clear"), Vector3.One);
+                    break;
             }
+
             SwapBuffers();
         }
 
@@ -135,6 +155,7 @@ namespace BreakoutOpenTK.Gameloop
         {
             _ball.Position = new Vector2(_player.Position.X + _player.Size.X/2 - _ball.Size.X/2, _player.Position.Y - _ball.Size.Y);
             _ball.Velocity = new Vector2(_initialDrag, -400);
+            _currentSpeedMultiplier = 1;
             _ball.Tethered = true;
         }
         
@@ -145,11 +166,31 @@ namespace BreakoutOpenTK.Gameloop
             GameTime.TotalTime += (float)args.Time;
             
             base.OnUpdateFrame(args);
+
+            if (_endCart >= 0)
+            {
+                _endCart -= GameTime.DeltaTime;
+                if (_endCart <= 0)
+                {
+                    _endCart = -1;
+                    _gameStatus = GameStaus.Menu;
+                }
+            }
+            
+            if (_currentLevel.IsLevelComplete())
+            {
+                _gameStatus = GameStaus.Win;
+                _endCart = 2f;
+                ResetGame();
+            }
             
             //update the ball
-            _ball.UpdatePosition(GameTime.DeltaTime);
-            ProcessCollisions();
-            UpdatePowerUps();
+            if (_gameStatus == GameStaus.Game)
+            {
+                _ball.UpdatePosition(GameTime.DeltaTime);
+                ProcessCollisions();
+                UpdatePowerUps();
+            }
             
             //check if the player lost a life
             if (_ball.Position.Y > _camera.WindowSize.Y)
@@ -161,30 +202,18 @@ namespace BreakoutOpenTK.Gameloop
             //check if the player lost all lives
             if (_lives <= 0)
             {
-                _currentLevel.Reset();
-                _lives = 3;
-                _player.Size = _playerSize;
-                _player.Position = _initialPlayerPosition;
-                _player.Color = Vector3.One;
-                _ball.Texture = _shaderAndTextureManager.GetTexture("pickaxe");
-                _ball.Ghost = false;
-                _currentDrag = _initialDrag;
-                ResetBall();
-                //_gameStatus = GameStaus.GameOver;
+                _gameStatus = GameStaus.GameOver;
+                _endCart = 2f;
+                ResetGame();
             }
             
             //check for keyboard input
             if (KeyboardState.IsKeyDown(Keys.Escape))
             {
-                _gameStatus = _gameStatus switch
-                {
-                    GameStaus.Game => GameStaus.Menu,
-                    GameStaus.Menu => GameStaus.Game,
-                    _ => _gameStatus
-                };
+                Close();
             }
 
-            if (_gameStatus == GameStaus.Game)
+            if (_gameStatus is GameStaus.Menu or GameStaus.Game)
             {
                 if (KeyboardState.IsKeyDown(Keys.A))
                 {
@@ -197,6 +226,7 @@ namespace BreakoutOpenTK.Gameloop
                         }
                     }
                 }
+
                 if (KeyboardState.IsKeyDown(Keys.D))
                 {
                     if (_player.Position.X + _player.Size.X <= _camera.WindowSize.X)
@@ -208,13 +238,26 @@ namespace BreakoutOpenTK.Gameloop
                         }
                     }
                 }
+
                 if (KeyboardState.IsKeyDown(Keys.Space))
                 {
                     _ball.Tethered = false;
+                    _gameStatus = GameStaus.Game;
                 }
             }
-        }
 
+            if (KeyboardState.IsKeyDown(Keys.Left) && _gameStatus == GameStaus.Menu)
+            {
+                SelectLevel(false);
+            }
+
+            if (KeyboardState.IsKeyDown(Keys.Right) && _gameStatus == GameStaus.Menu)
+            {
+                SelectLevel(true);
+            }
+            
+        }
+        
         protected override void OnUnload()
         {
             // Unbind all the resources by binding the targets to 0/null.
@@ -226,6 +269,42 @@ namespace BreakoutOpenTK.Gameloop
             _shaderAndTextureManager.DeleteAll();
             
             base.OnUnload();
+        }
+
+        private void ResetGame()
+        {
+            _currentLevel.Reset();
+            _lives = 3;
+            _player.Size = _playerSize;
+            _player.Position = _initialPlayerPosition;
+            _player.Color = Vector3.One;
+            _ball.Texture = _shaderAndTextureManager.GetTexture("pickaxe");
+            _ball.Ghost = false;
+            _currentSpeedMultiplier = _initialDrag;
+            ResetBall();
+        }
+        
+        private void SelectLevel(bool increase)
+        {
+            List<string> keys = _levels.Keys.ToList();
+            var index = keys.IndexOf(_currentLevel.GetLevelName());
+            if (increase)
+            {
+                index++;
+                if (index >= keys.Count)
+                {
+                    index = 0;
+                }
+            }
+            else
+            {
+                index--;
+                if (index < 0)
+                {
+                    index = keys.Count - 1;
+                }
+            }
+            _currentLevel = _levels[keys[index]];
         }
 
         private void UpdatePowerUps()
@@ -291,11 +370,19 @@ namespace BreakoutOpenTK.Gameloop
                 float amplifier = 2.0f;
                 Vector2 oldVelocity = _ball.Velocity;
                 //calculate the new velocity
-                var newXVelocity = Math.Abs(_currentDrag) * percent * amplifier;
+                var newXVelocity = Math.Abs(_initialDrag) * _currentSpeedMultiplier * percent * amplifier;
                 // check from which direction the ball is coming from and set the new velocity accordingly
-                if (oldVelocity.X < 0)
+                if (oldVelocity.X < 0 && !_ball.Sticky)
                 {
                     newXVelocity = -newXVelocity;
+                }
+                if (_ball.Sticky)
+                {
+                    var fiftyFifty = _randomizer.Next(0, 2);
+                    if (fiftyFifty == 0)
+                    {
+                        newXVelocity = -newXVelocity;
+                    }
                 }
                 
                 var newYVelocity = -1 * Math.Abs(oldVelocity.Y);
@@ -365,15 +452,15 @@ namespace BreakoutOpenTK.Gameloop
                         break;
                     case PowerUpType.SpeedDown:
                         _ball.Velocity = new Vector2(_ball.Velocity.X * 0.6f, _ball.Velocity.Y * 0.6f);
-                        _currentDrag *= 0.6f;
+                        _currentSpeedMultiplier *= 0.6f;
                         break;
                     case PowerUpType.SpeedUp:
                         _ball.Velocity = new Vector2(_ball.Velocity.X * 1.4f, _ball.Velocity.Y * 1.4f);
-                        _currentDrag *= 1.4f;
+                        _currentSpeedMultiplier *= 1.4f;
                         break;
                     case PowerUpType.Sticky:
                         _ball.Sticky = true;
-                        _player.Color = new Vector3(1, 0.5f, 1);
+                        _player.Color = new Vector3(0.5f, 1, 1);
                         powerUp.Duration = 15f;
                         break;
                     case PowerUpType.InstantKill:

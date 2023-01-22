@@ -8,3 +8,4 @@ Erstellt von: Steven Diestel, 575659
 - Für die grundlegende Projektstruktur wurde die Video Serie [OpenGL (C#) 2D Game](https://www.youtube.com/playlist?list=PLpzj0QQ-XL5Cj8QaORqrtvvl4NJzuQR81) verwendet.
 - Des Weiteren wurde das Kapitel [LearnOpenGL 2D Game](https://learnopengl.com/In-Practice/2D-Game/Setting-up) von LearnOpenGL lose mitverfolgt um die Grundlagen zu verstehen.
 - Die verwendeten Texturen wurden von [Mojang Bedrock-Samples](https://github.com/Mojang/bedrock-samples/tree/main/resource_pack) bezogen.
+- Zur Erstellung der Texte wurde [Textcraft](https://textcraft.net/) verwendet.

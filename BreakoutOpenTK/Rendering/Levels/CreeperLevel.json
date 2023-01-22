@@ -1,0 +1,17 @@
+﻿{
+  "Tiles":
+  [
+          ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+          ["", "", "", "", "", "", "cobble", "cobble", "cobble", "cobble", "cobble", "cobble", "cobble", "cobble", "", "", "", "", "", ""],
+          ["", "", "", "", "", "", "cobble", "", "", "cobble", "cobble", "", "", "cobble", "", "", "", "", "", ""],
+          ["", "", "", "", "", "", "cobble", "", "", "cobble", "cobble", "", "", "cobble", "", "", "", "", "", ""],
+          ["", "gold", "bedrock", "", "", "", "cobble", "cobble", "cobble", "", "", "cobble", "cobble", "cobble", "", "", "", "bedrock", "gold", ""],
+          ["", "", "gold", "", "", "", "cobble", "cobble", "", "", "", "", "cobble", "cobble", "", "", "", "gold", "", ""],
+          ["", "", "", "", "", "", "cobble", "cobble", "", "", "", "", "cobble", "cobble", "", "", "", "", "", ""],
+          ["", "", "", "", "", "", "cobble", "cobble", "", "cobble", "cobble", "", "cobble", "cobble", "", "", "", "", "", ""],
+          ["", "", "", "", "", "", "cobble", "cobble", "cobble", "cobble", "cobble", "cobble", "cobble", "cobble", "", "", "", "", "", ""]
+  ],
+  "TileWidth" : 40,
+  "TileHeight" : 40,
+  "LevelName" : "Creeper"
+}
