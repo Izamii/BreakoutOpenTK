@@ -1,0 +1,13 @@
+﻿{
+  "Tiles":[["cobble","cobble","cobble","cobble","cobble","cobble","gold","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble"],
+          ["cobble","cobble","cobble","iron","cobble","gold","cobble","cobble","cobble","cobble","cobble","cobble","cobble","iron","cobble","cobble","cobble","cobble","cobble","cobble"],
+          ["cobble","dirt","cobble","cobble","cobble","gold","cobble","cobble","cobble","dirt","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble"],
+          ["cobble","cobble","iron","iron","cobble","cobble","cobble","bedrock","cobble","iron","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble","cobble"],
+          ["cobble","cobble","cobble","iron","cobble","cobble","cobble","bedrock","cobble","dirt","cobble","cobble","dirt","cobble","cobble","cobble","cobble","cobble","cobble","cobble"],
+          ["cobble","gold","bedrock","cobble","cobble","cobble","cobble","cobble","dirt","cobble","cobble","dirt","cobble","dirt","cobble","cobble","cobble","cobble","cobble","cobble"],
+          ["dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt"],
+          ["dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt","dirt"]],
+  "TileWidth" : 40,
+  "TileHeight" : 40,
+  "LevelName" : "Test Level"
+}
