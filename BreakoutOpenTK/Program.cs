@@ -13,6 +13,7 @@ namespace BreakoutOpenTK
             using (Game game = new(800, 600, "Mine-Out"))
             {
                 game.Run();
+                
             }
 
         }
