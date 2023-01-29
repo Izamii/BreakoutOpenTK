@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BreakoutOpenTK.Rendering.Levels
+﻿namespace BreakoutOpenTK.Rendering.Level
 {
     public class LevelData
     {

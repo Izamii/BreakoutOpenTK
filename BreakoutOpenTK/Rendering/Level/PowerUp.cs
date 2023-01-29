@@ -1,7 +1,7 @@
 ﻿using BreakoutOpenTK.Rendering.Textures;
 using OpenTK.Mathematics;
 
-namespace BreakoutOpenTK.Rendering.Levels
+namespace BreakoutOpenTK.Rendering.Level
 {
     public enum PowerUpType
     {

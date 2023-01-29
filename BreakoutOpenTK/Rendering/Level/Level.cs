@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using BreakoutOpenTK.Rendering.Sprites;
+﻿using BreakoutOpenTK.Rendering.Sprites;
 using BreakoutOpenTK.Rendering.Utility;
 using Newtonsoft.Json;
 using OpenTK.Mathematics;
 
-
-namespace BreakoutOpenTK.Rendering.Levels
+namespace BreakoutOpenTK.Rendering.Level
 {
     public class Level
     {

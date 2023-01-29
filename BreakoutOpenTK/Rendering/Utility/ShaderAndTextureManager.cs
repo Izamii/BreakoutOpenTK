@@ -3,12 +3,14 @@ using BreakoutOpenTK.Rendering.Shaders;
 using BreakoutOpenTK.Rendering.Textures;
 using OpenTK.Graphics.OpenGL4;
 
+// the following header file was used in order to create the ShaderAndTextureManager class:
+// https://learnopengl.com/code_viewer_gh.php?code=src/7.in_practice/3.2d_game/0.full_source/resource_manager.h
 namespace BreakoutOpenTK.Rendering.Utility
 {
     public class ShaderAndTextureManager
     {
-        Dictionary<string, Shader> shaders = new Dictionary<string, Shader>();
-        Dictionary<string, Texture> textures = new Dictionary<string, Texture>();
+        Dictionary<string, Shader> shaders = new();
+        Dictionary<string, Texture> textures = new();
 
 
         public ShaderAndTextureManager()

@@ -1,6 +1,5 @@
 ﻿using System;
 using BreakoutOpenTK.Gameloop;
-using BreakoutOpenTK.Rendering.Levels;
 using BreakoutOpenTK.Rendering.Utility;
 using OpenTK.Windowing.Common;
 

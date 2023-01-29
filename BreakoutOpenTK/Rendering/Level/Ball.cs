@@ -1,9 +1,8 @@
-﻿using System;
-using BreakoutOpenTK.Rendering.Sprites;
+﻿using BreakoutOpenTK.Rendering.Sprites;
 using BreakoutOpenTK.Rendering.Textures;
 using OpenTK.Mathematics;
 
-namespace BreakoutOpenTK.Rendering.Levels
+namespace BreakoutOpenTK.Rendering.Level
 {
     public class Ball {
         private Vector2 _position;

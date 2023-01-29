@@ -3,6 +3,9 @@ using BreakoutOpenTK.Rendering.Textures;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
+// the following header file was referenced to create this class:
+// https://learnopengl.com/code_viewer_gh.php?code=src/7.in_practice/3.2d_game/0.full_source/sprite_renderer.h
+
 namespace BreakoutOpenTK.Rendering.Sprites
 {
     public class Sprite

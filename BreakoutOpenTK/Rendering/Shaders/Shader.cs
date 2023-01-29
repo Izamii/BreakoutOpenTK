@@ -4,7 +4,8 @@ using System.IO;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-
+// the following was referenced to create this class:
+// https://learnopengl.com/code_viewer_gh.php?code=src/7.in_practice/3.2d_game/0.full_source/shader.cpp
 namespace BreakoutOpenTK.Rendering.Shaders
 {
     public class Shader
@@ -116,60 +117,12 @@ namespace BreakoutOpenTK.Rendering.Shaders
             GL.Uniform1(GL.GetUniformLocation(ProgramId, name), value ? 1 : 0);
         }
         
-        public void SetInt(string name, int value)
-        {
-            GL.Uniform1(GL.GetUniformLocation(ProgramId, name), value);
-        }
-        
-        public void SetFloat(string name, float value)
-        {
-            GL.Uniform1(GL.GetUniformLocation(ProgramId, name), value);
-        }
-        
-        public void SetVec2(string name, float x, float y)
-        {
-            GL.Uniform2(GL.GetUniformLocation(ProgramId, name), x, y);
-        }
-        
-        public void SetVec2(string name, Vector2i value)
-        {
-            GL.Uniform2(GL.GetUniformLocation(ProgramId, name), value.X, value.Y);
-        }
-        
-        public void SetVec2(string name, Vector2 value)
-        {
-            GL.Uniform2(GL.GetUniformLocation(ProgramId, name), value.X, value.Y);
-        }
-        
-        public void SetVec3(string name, float x, float y, float z)
-        {
-            GL.Uniform3(GL.GetUniformLocation(ProgramId, name), x, y, z);
-        }
-        
-        public void SetVec3(string name, Vector3i value)
-        {
-            GL.Uniform3(GL.GetUniformLocation(ProgramId, name), value.X, value.Y, value.Z);
-        }
-        
+
         public void SetVec3(string name, Vector3 value)
         {
             GL.Uniform3(GL.GetUniformLocation(ProgramId, name), value.X, value.Y, value.Z);
         }
         
-        public void SetVec4(string name, float x, float y, float z, float w)
-        {
-            GL.Uniform4(GL.GetUniformLocation(ProgramId, name), x, y, z, w);
-        }
-        
-        public void SetVec4(string name, Vector4i value)
-        {
-            GL.Uniform4(GL.GetUniformLocation(ProgramId, name), value.X, value.Y, value.Z, value.W);
-        }
-        
-        public void SetVec4(string name, Vector4 value)
-        {
-            GL.Uniform4(GL.GetUniformLocation(ProgramId, name), value.X, value.Y, value.Z, value.W);
-        }
         
         public void SetMat4(string name, Matrix4 value)
         {

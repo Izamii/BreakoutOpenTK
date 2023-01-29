@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BreakoutOpenTK.Rendering.Camera;
-using BreakoutOpenTK.Rendering.Levels;
+using BreakoutOpenTK.Rendering.Level;
 using BreakoutOpenTK.Rendering.Sprites;
 using BreakoutOpenTK.Rendering.Utility;
 using OpenTK.Graphics.OpenGL4;
@@ -110,10 +110,11 @@ namespace BreakoutOpenTK.Gameloop
                 _camera.WindowSize.X);
             
             //load levels
-            Level item = new ("Rendering/Levels/TestLevel.json" ,_shaderAndTextureManager);
-            Level item2 = new("Rendering/Levels/CreeperLevel.json", _shaderAndTextureManager);
+            Level item = new ("Resources/Level/TestLevel.json" ,_shaderAndTextureManager);
+            Level item2 = new("Resources/Level/CreeperLevel.json", _shaderAndTextureManager);
+            Level item3 = new ("Resources/Level/Demo.json", _shaderAndTextureManager);
 
-            _levels = new Dictionary<string, Level> {{item.GetLevelName(), item}, {item2.GetLevelName(), item2}};
+            _levels = new Dictionary<string, Level> {{item.GetLevelName(), item}, {item2.GetLevelName(), item2}, {item3.GetLevelName(), item3}};
             _currentLevel = item;
         }
 
